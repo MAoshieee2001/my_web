@@ -1,1 +1,1 @@
-# Bienvenidos a mi proyecto transaccional, ire agregarpon ciertas mejorar al proyecto, de igual forma, tengo que recursearme con github :D
+# Bienvenidos al proyecto transaccional, un sistema POS, donde utilizaremos DJANGO como backend, AJAX, librerias adiccionales y entre otras cosas mas. 
