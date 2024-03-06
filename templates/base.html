@@ -1,0 +1,75 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="Marin Tantalean, Moises Fernando">
+    <title>{{ title }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/logotipo.png' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/css/adminlte.min.css' %}">
+    <!-- jQuery -->
+    <script src="{% static 'lib/adminlte-3.2.0/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{% static 'lib/sweetalert2-11.0.16/js/sweetalert2.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/sweetalert2-11.0.16/css/sweetalert2.min.css' %}">
+    <!-- Jquery-Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-3.3.4/css/jquery-confirm.min.css' %}">
+    <script src="{% static 'lib/jquery-confirm-3.3.4/js/jquery-confirm.min.js' %}"></script>
+    <!--jquery-loading-overlay-->
+    <script src="{% static 'lib/jquery-loading-overlay-2.1.7/js/loadingoverlay.min.js' %}"></script>
+    {% block head %}{% endblock %}
+    <!-- Mis funciones -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/functions.js' %}"></script>
+</head>
+<body>
+
+</body>
+</html>
+<body class="hold-transition sidebar-mini layout-fixed">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <!-- Navbar -->
+    {% include 'header.html' %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    {% include 'sidebar.html' %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        {% block body %}{% endblock %}
+    </div>
+    <!-- /.content-wrapper -->
+
+    {% include 'footer.html' %}
+
+</div>
+<!-- ./wrapper -->
+
+{% block modals %}{% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% if messages %}
+    <script type="application/javascript">
+        let errors = '';
+        {% for message in messages %}
+            errors += '{{ message }}\n';
+        {% endfor %}
+        get_errors(errors);
+    </script>
+{% endif %}
+<!-- Bootstrap 4 -->
+<script src="{% static 'lib/adminlte-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'lib/adminlte-3.2.0/js/adminlte.min.js' %}"></script>
+
+</body>
+</html>

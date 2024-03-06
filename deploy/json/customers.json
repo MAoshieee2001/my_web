@@ -1,0 +1,92 @@
+[
+  {
+    "first": "John",
+    "last": "Doe",
+    "date": "1985-05-20",
+    "gender": "true",
+    "dni": "12345678",
+    "address": "123 Main St",
+    "phone": "555-1234"
+  },
+  {
+    "first": "Jane",
+    "last": "Smith",
+    "date": "1990-10-15",
+    "gender": "false",
+    "dni": "87654321",
+    "address": "456 Elm St",
+    "phone": "555-5678"
+  },
+  {
+    "first": "Michael",
+    "last": "Johnson",
+    "date": "1978-03-25",
+    "gender": "true",
+    "dni": "23456789",
+    "address": "789 Oak St",
+    "phone": "555-9012"
+  },
+  {
+    "first": "Emily",
+    "last": "Brown",
+    "date": "1989-07-08",
+    "gender": "false",
+    "dni": "98765432",
+    "address": "321 Pine St",
+    "phone": "555-3456"
+  },
+  {
+    "first": "David",
+    "last": "Davis",
+    "date": "1982-12-30",
+    "gender": "true",
+    "dni": "34567890",
+    "address": "654 Cedar St",
+    "phone": "555-7890"
+  },
+  {
+    "first": "Olivia",
+    "last": "Miller",
+    "date": "1995-02-10",
+    "gender": "false",
+    "dni": "87654329",
+    "address": "987 Maple St",
+    "phone": "555-2345"
+  },
+  {
+    "first": "Daniel",
+    "last": "Wilson",
+    "date": "1976-09-05",
+    "gender": "true",
+    "dni": "45678901",
+    "address": "876 Birch St",
+    "phone": "555-6789"
+  },
+  {
+    "first": "Sophia",
+    "last": "Taylor",
+    "date": "1992-04-18",
+    "gender": "false",
+    "dni": "98765436",
+    "address": "765 Walnut St",
+    "phone": "555-1234"
+  },
+  {
+    "first": "Matthew",
+    "last": "Anderson",
+    "date": "1987-08-01",
+    "gender": "true",
+    "dni": "56789012",
+    "address": "654 Pine St",
+    "phone": "555-5678"
+  },
+  {
+    "first": "Isabella",
+    "last": "Thomas",
+    "date": "1994-01-23",
+    "gender": "false",
+    "dni": "87654323",
+    "address": "543 Oak St",
+    "phone": "555-9012"
+  }
+]

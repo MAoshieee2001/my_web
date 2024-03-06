@@ -1,0 +1,52 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block head_list %}
+    <script src="{% static 'js/sale/list.js' %}"></script>
+{% endblock %}
+
+{% block cols %}
+    <tr>
+        <th scope="col" style="width: 5%;">#</th>
+        <th scope="col" style="width: 20%;">Cliente</th>
+        <th scope="col" style="width: 10%;">F. Registro</th>
+        <th scope="col" style="width: 20%;">Empleado</th>
+        <th scope="col" style="width: 10%;">Subtotal</th>
+        <th scope="col" style="width: 5%;">IVA</th>
+        <th scope="col" style="width: 10%;">Total</th>
+        <th scope="col" style="width: 10%;">Efectivo</th>
+        <th scope="col" style="width: 10%;">Cambio</th>
+        <th scope="col" style="width: 5%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+
+{% block modals %}
+    <div class="modal fade" id="myModalDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-search"></i> Detalle de Venta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" id="details">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="width: 45%;">Producto</th>
+                                <th scope="col" style="width: 15%;">Cantidad</th>
+                                <th scope="col" style="width: 20%;">Precio</th>
+                                <th scope="col" style="width: 20%;">Subtotal</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

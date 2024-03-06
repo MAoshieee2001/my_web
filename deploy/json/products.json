@@ -1,0 +1,107 @@
+[
+  {
+    "category": "Electronics",
+    "code": "001",
+    "names": "Smartphone",
+    "stock": "10",
+    "pvp": "500"
+  },
+  {
+    "category": "Clothing",
+    "code": "002",
+    "names": "T-Shirt",
+    "stock": "20",
+    "pvp": "20"
+  },
+  {
+    "category": "Home",
+    "code": "003",
+    "names": "Chair",
+    "stock": "5",
+    "pvp": "100"
+  },
+  {
+    "category": "Electronics",
+    "code": "004",
+    "names": "Laptop",
+    "stock": "8",
+    "pvp": "1000"
+  },
+  {
+    "category": "Beauty",
+    "code": "005",
+    "names": "Perfume",
+    "stock": "15",
+    "pvp": "50"
+  },
+  {
+    "category": "Home",
+    "code": "006",
+    "names": "Table",
+    "stock": "3",
+    "pvp": "200"
+  },
+  {
+    "category": "Clothing",
+    "code": "007",
+    "names": "Jeans",
+    "stock": "12",
+    "pvp": "30"
+  },
+  {
+    "category": "Electronics",
+    "code": "008",
+    "names": "Headphones",
+    "stock": "6",
+    "pvp": "80"
+  },
+  {
+    "category": "Beauty",
+    "code": "009",
+    "names": "Lipstick",
+    "stock": "18",
+    "pvp": "10"
+  },
+  {
+    "category": "Home",
+    "code": "010",
+    "names": "Sofa",
+    "stock": "2",
+    "pvp": "500"
+  },
+  {
+    "category": "Clothing",
+    "code": "011",
+    "names": "Dress",
+    "stock": "7",
+    "pvp": "50"
+  },
+  {
+    "category": "Electronics",
+    "code": "012",
+    "names": "TV",
+    "stock": "4",
+    "pvp": "1000"
+  },
+  {
+    "category": "Beauty",
+    "code": "013",
+    "names": "Shampoo",
+    "stock": "20",
+    "pvp": "15"
+  },
+  {
+    "category": "Home",
+    "code": "014",
+    "names": "Bed",
+    "stock": "1",
+    "pvp": "800"
+  },
+  {
+    "category": "Clothing",
+    "code": "015",
+    "names": "Shirt",
+    "stock": "9",
+    "pvp": "25"
+  }
+] 

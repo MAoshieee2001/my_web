@@ -1,0 +1,121 @@
+{% load static %}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+        <img src="{% static 'img/logotipo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">POS-STORE</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{{ request.user.get_imagen }}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="{% url 'accounts:user_profile' %}" class="d-block">{{ request.user.first_name }}</a>
+            </div>
+        </div>
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Mi Bodega
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'pos:category_list' %}" class="nav-link">
+                                <i class="fas fa-truck-loading nav-icon"></i>
+                                <p>Categoria</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'pos:product_list' %}" class="nav-link">
+                                <i class="fas fa-box nav-icon"></i>
+                                <p>Producto</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>
+                            Facturación
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'pos:customer_list' %}" class="nav-link">
+                                <i class="fas fa-user-friends nav-icon"></i>
+                                <p>Cliente</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'pos:sale_list' %}" class="nav-link">
+                                <i class="fas fa-shopping-cart nav-icon"></i>
+                                <p>Venta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <p>
+                            Reportes
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-shopping-cart nav-icon"></i>
+                                <p>Venta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-lock"></i>
+                        <p>
+                            Seguridad
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:user_list' %}" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>Usuario</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'pos:log_list' %}" class="nav-link">
+                                <i class="fas fa-binoculars nav-icon"></i>
+                                <p>Bitácora</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

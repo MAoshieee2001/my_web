@@ -1,0 +1,77 @@
+{% extends 'body.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    {% block head_form %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form action="." method="post" data-url="{{ list_url }}">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Default box -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                {% if action == 'create' %}
+                                    <i class="fas fa-plus"></i>
+                                {% else %}
+                                    <i class="fas fa-edit"></i>
+                                {% endif %}
+                                {{ title }}
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="{{ action }}">
+
+                            {% for field in form %}
+                                <div class="form-group">
+                                    <label>{{ field.label }}</label>
+                                    <div class="input-group  mb-3">
+                                        {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+                                        {% block additional_button %}{% endblock %}
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-save"></i> Guardar Registro</button>
+                            <a class="btn btn-danger btn-sm" href="{{ list_url }}"><i class="fas fa-times"></i> Cancelar</a>
+                        </div>
+                        <!-- /.card-footer-->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="application/javascript">
+        $(function () {
+            $('form').on('submit', function (evt) {
+                evt.preventDefault();
+                let params = new FormData(this);
+                let data_url = $(this).attr('data-url');
+                set_data_server({
+                    'params': params,
+                    'callback': function (response) {
+                        get_sweetalert2({
+                            'html': 'Se realizo correctamente la acción.',
+                            'callback': function () {
+                                location.href = data_url;
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

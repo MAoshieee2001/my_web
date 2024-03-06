@@ -1,0 +1,199 @@
+{% extends 'body.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <!-- select2 -->
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+    <!-- Datatables -->
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.25/css/dataTables.bootstrap5.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.25/plugins/responsive-2.2.9/css/responsive.bootstrap5.min.css' %}"/>
+    <script src="{% static 'lib/datatables-1.10.25/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.25/js/dataTables.bootstrap5.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.25/plugins/responsive-2.2.9/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.25/plugins/responsive-2.2.9/js/responsive.bootstrap5.min.js' %}"></script>
+    <!-- momentjs -->
+    <script src="{% static 'lib/moment-2.25.3/moment-with-locales.js' %}"></script>
+    <!-- tempusdominus -->
+    <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}" crossorigin="anonymous"/>
+    <!-- Touchspin -->
+    <link href="{% static 'lib/bootstrap-touchspin-4.2.5/css/jquery.bootstrap-touchspin.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/bootstrap-touchspin-4.2.5/js/jquery.bootstrap-touchspin.min.js' %}"></script>
+    <!-- jquery ui -->
+    <link href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/sale/form.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form method="post" action="." id="frmSale" data-url="{{ list_url }}">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Default box -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus"></i> {{ title }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-8">
+
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label>{{ form.date_joined.label }}</label>
+                                            {{ form.date_joined|add_class:'form-control'|attr:'readonly' }}
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="form-group">
+                                                <label>{{ form.customer.label }}</label>
+                                                <div class="input-group">
+                                                    {{ form.customer|add_class:'form-control' }}
+                                                    <span class="input-group-append">
+                                            <a class="btn btn-info" rel="nuevoCliente"><i class="fas fa-user-plus"></i> Agregar Cliente</a>
+                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Búsqueda de Producto :</label>
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Ingrese el nombre o código del producto." autocomplete="off" class="form-control" name="producto">
+                                            <span class="input-group-append">
+                                            <a class="btn btn-info" id="btnListadoProducto"><i class="fas fa-search"></i> Buscar Productos</a>
+                                            <a class="btn btn-warning" id="btnLimpiar"><i class="fas fa-times"></i> Limpiar Búsqueda</a>
+                                            <a class="btn btn-danger" id="btnEliminarTodo"><i class="fas fa-trash-alt"></i> Borrar Todo</a>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="details">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" style="width: 5%;">Eliminar</th>
+                                                <th scope="col" style="width: 30%;">Producto</th>
+                                                <th scope="col" style="width: 10%;">Stock</th>
+                                                <th scope="col" style="width: 15%;">Cantidad</th>
+                                                <th scope="col" style="width: 15%;">Precio</th>
+                                                <th scope="col" style="width: 15%;">Subtotal</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="{{ action }}">
+                                    <div class="form-group">
+                                        <label>{{ form.subtotal.label }}</label>
+                                        {{ form.subtotal|add_class:'form-control'|attr:'readonly' }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ form.iva.label }}</label>
+                                        {{ form.iva|add_class:'form-control' }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>IVA Calculado</label>
+                                        <input type="text" name="iva_calculado" readonly="readonly" value="0.00" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ form.total.label }}</label>
+                                        {{ form.total|add_class:'form-control'|attr:'readonly' }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ form.cash.label }}</label>
+                                        {{ form.cash|add_class:'form-control' }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ form.change.label }}</label>
+                                        {{ form.change|add_class:'form-control'|attr:'readonly' }}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-save"></i> Realizar Venta</button>
+                            <a class="btn btn-danger btn-sm" href="{{ list_url }}"><i class="fas fa-times"></i> Cancelar</a>
+                        </div>
+                        <!-- /.card-footer-->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block modals %}
+    <!-- Modal -->
+    <div class="modal fade" id="myModalCliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <form action="." method="post" id="frmCliente">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-plus"></i> Creación de Cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% for field in frmCustomer %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-block"><i class="fas fa-save"></i> Guardar Registro</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Modal Products -->
+    <div class="modal fade" id="myModalProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="." method="post" id="frmCliente">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-box-open"></i> Listado de Productos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="products">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="width: 5%;">Imagen</th>
+                                    <th scope="col" style="width: 70%;">Nombre</th>
+                                    <th scope="col" style="width: 10%;">Stock</th>
+                                    <th scope="col" style="width: 10%;">Precio</th>
+                                    <th scope="col" style="width: 5%;">Opción</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

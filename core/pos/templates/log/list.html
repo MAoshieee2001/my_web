@@ -1,0 +1,23 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block head_list %}
+    <script src="{% static 'js/log/list.js' %}"></script>
+{% endblock %}
+
+{% block cols %}
+    <tr>
+        <th scope="col" style="width: 5%;">#</th>
+        <th scope="col" style="width: 20%;">Cliente</th>
+        <th scope="col" style="width: 10%;">F. Registrada</th>
+        <th scope="col" style="width: 20%;">Empleado</th>
+        <th scope="col" style="width: 10%;">Total</th>
+        <th scope="col" style="width: 5%;">Acción</th>
+        <th scope="col" style="width: 10%;">F. Eliminada</th>
+        <th scope="col" style="width: 20%;">Empleado Eliminador</th>
+    </tr>
+{% endblock %}
+
+{% block buttons_list %}
+    <a class="btn btn-success btn-sm" href="{{ list_url }}"><i class="fas fa-sync-alt"></i> Actualizar</a>
+{% endblock %}
