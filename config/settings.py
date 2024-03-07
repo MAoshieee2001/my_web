@@ -29,9 +29,11 @@ MY_APPS = [
     'core.dashboard',
     'core.accounts',
     'core.login',
+    'core.reports',
 ]
 THIRD_APPS = [
     'widget_tweaks',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 INSTALLED_APPS = APPS_DJANGO + MY_APPS + THIRD_APPS

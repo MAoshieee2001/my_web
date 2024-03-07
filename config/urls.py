@@ -6,10 +6,11 @@ import settings
 from core.dashboard.views import DashboardTemplateView
 
 urlpatterns = [
+    path('', include('core.login.urls')),
     path('admin/', admin.site.urls),
     path('core/', include('core.pos.urls')),
     path('accounts/', include('core.accounts.urls')),
-    path('', include('core.login.urls')),
+    path('reports/', include('core.reports.urls')),
     path('dashboard/', DashboardTemplateView.as_view(), name='dashboard'),
 ]
 if settings.DEBUG:

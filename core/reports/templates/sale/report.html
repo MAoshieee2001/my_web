@@ -1,0 +1,18 @@
+{% extends 'report.html' %}
+{% load static %}
+
+{% block head_report %}
+    <script src="{% static 'js/sale/report.js' %}"></script>
+{% endblock %}
+
+{% block cols %}
+    <tr>
+        <th class="#" style="width: 10%;">Fecha de venta</th>
+        <th class="#" style="width: 5%;">#</th>
+        <th class="#" style="width: 30%;">Cliente</th>
+        <th class="#" style="width: 10%;">Subtotal</th>
+        <th class="#" style="width: 10%;">IVA</th>
+        <th class="#" style="width: 10%;">Total</th>
+        <th class="#" style="width: 30%;">Empleado</th>
+    </tr>
+{% endblock %}
