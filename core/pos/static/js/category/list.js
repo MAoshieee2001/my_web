@@ -1,6 +1,8 @@
 let category = {
     list: function () {
         $('#data').DataTable({
+            serverSide: true,
+            processing: true,
             responsive: true,
             autoWidth: false,
             destroy: true,
@@ -12,7 +14,7 @@ let category = {
                 data: {
                     action: 'get_categories',
                 }, // parametros
-                dataSrc: ""
+                dataSrc: "data"
             },
             columns: [
                 {"data": "position"},

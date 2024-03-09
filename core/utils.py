@@ -1,5 +1,6 @@
 import random
 import string
+import random
 
 import settings
 from config import wsgi
@@ -9,21 +10,19 @@ from core.pos.models import Product, Category, Customer
 
 # print(f'PR{random.randint(100, 999)}{random.choice(string.ascii_letters)}')
 
+
 '''
 def insert_product():
-    ruta = f'{settings.BASE_DIR}/deploy/json/products.json'
+    ruta = f'{settings.BASE_DIR}/deploy/json/categories.json'
     try:
-        print(ruta)
         with open(ruta, encoding='utf8') as product_file:
             products = json.load(product_file)
-            print(products)
             for p in products:
                 product = Product()
-                product.category = Category.objects.get_or_create(names=p['category'])[0]
-                product.code = p['code']
+                product.category = Category.objects.get_or_create(names=p['names'])[0]
                 product.names = p['names']
-                product.stock = int(p['stock'])
-                product.pvp = float(p['pvp'])
+                product.code = random.randint(1, 200)
+                product.pvp = round(random.randint(1, 100) * random.random(), 2)
                 product.save()
     except Exception as e:
         print(e)

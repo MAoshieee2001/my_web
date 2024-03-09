@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
@@ -8,6 +9,8 @@ from django.views.generic import TemplateView, CreateView, UpdateView, DeleteVie
 from core.pos.forms import CategoryForm
 from core.pos.mixins import ValidatePermissionRequiredMixin
 from core.pos.models import Category
+
+import time
 
 MODULE_NAME = 'Categoria'
 
@@ -21,8 +24,26 @@ class CategoryTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
         try:
             action = request.POST['action']
             if action == 'get_categories':
+                # Capturamos los datos mandados por dataTables
+                start = int(request.POST.get('start', 0))
+                length = int(request.POST.get('length', 10))
+                term = request.POST.get('search[value]', '')
+                # LLamos a nuestro queryset
                 categories = Category.objects.all()
-                data = [category.toJSON() | {'position': position} for position, category in enumerate(categories, start=1)]
+                # Si hay un dato a buscar lo filtramos
+                if term:
+                    categories = categories.filter(names__icontains=term)
+                # Manejamos la paginacion con nuestro backend
+                paginator = Paginator(categories, length)
+                get_numbers = start // length + 1
+                categories_page = paginator.get_page(get_numbers)
+                # Vamoss a mandar toda nuestra información al dataTable
+                data = {
+                    'data': [category.toJSON() | {'position': position} for position, category in enumerate(categories_page, start=start + 1)],
+                    'recordsTotal': paginator.count,
+                    'recordsFiltered': paginator.count,
+                    'draw': int(request.POST.get('draw', 1))
+                }
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:

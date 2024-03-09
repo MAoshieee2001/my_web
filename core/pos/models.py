@@ -29,7 +29,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name='Categoria')
-    code = models.CharField(max_length=20, unique=True, verbose_name='Código')
+    code = models.CharField(max_length=20,  verbose_name='Código')
     names = models.CharField(max_length=144, verbose_name='Nombre')
     description = models.TextField(blank=True, null=True, verbose_name='Descripción')
     pvp = models.DecimalField(default=0.00, max_digits=9, decimal_places=2, verbose_name='Precio de venta')

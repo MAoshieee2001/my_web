@@ -1,6 +1,8 @@
 let product = {
     list: function () {
         $('#data').DataTable({
+            serverSide: true,
+            processing: true,
             responsive: true,
             autoWidth: false,
             destroy: true,
@@ -12,7 +14,7 @@ let product = {
                 data: {
                     action: 'get_products',
                 }, // parametros
-                dataSrc: ""
+                dataSrc: 'data'
             },
             columns: [
                 {"data": "position"},

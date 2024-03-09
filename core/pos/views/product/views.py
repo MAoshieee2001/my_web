@@ -1,6 +1,8 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
@@ -8,6 +10,8 @@ from django.views.generic import TemplateView, CreateView, UpdateView, DeleteVie
 from core.pos.forms import ProductForm
 from core.pos.mixins import ValidatePermissionRequiredMixin
 from core.pos.models import Product, Category
+
+import time
 
 MODULE_NAME = 'Producto'
 
@@ -21,8 +25,26 @@ class ProductTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, T
         try:
             action = request.POST['action']
             if action == 'get_products':
-                products = Product.objects.all()
-                data = [product.toJSON() | {'position': position} for position, product in enumerate(products, start=1)]
+                # Capturamo los datos del tatable
+                start = int(request.POST.get('start', 0))
+                length = int(request.POST.get('length', 10))
+                term = request.POST.get('search[value]', '')
+                # Obtenemoss nuesstro queryset
+                products = Product.objects.select_related('category')
+                # Filtramos ssis hay informacion entrante
+                if term:
+                    products.filter(Q(names__icontains=term) | Q(category__names__icontains=term))
+                # Creamos nuestra paginacion
+                paginator = Paginator(products, length)
+                get_numbers = start // length + 1
+                products_page = paginator.get_page(get_numbers)
+                # Mandamos la información
+                data = {
+                    'data': [product.toJSON() | {'position': position} for position, product in enumerate(products_page, start=start + 1)],
+                    'recordsTotal': paginator.count,
+                    'recordsFiltered': paginator.count,
+                    'draw': int(request.POST.get('draw', 1)),
+                }
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:
