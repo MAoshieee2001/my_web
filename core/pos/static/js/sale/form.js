@@ -302,6 +302,8 @@ $(function () {
 
     $('#btnListadoProducto').on('click', function (evt) {
         tbtProducts = $('#products').DataTable({
+            serverSide: true,
+            processing: true,
             responsive: true,
             autoWidth: false,
             destroy: true,
@@ -316,7 +318,7 @@ $(function () {
                     action: 'get_products_data',
                     products_id: JSON.stringify(sale.get_products_id()),
                 }, // parametros
-                dataSrc: ""
+                dataSrc: "data"
             },
             columns: [
                 {"data": "imagen"},

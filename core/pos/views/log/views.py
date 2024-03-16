@@ -19,7 +19,6 @@ class LogTemplateView(TemplateView):
             if action == 'get_logs':
                 logs = Logs.objects.all()
                 data = [log.toJSON() | {'position': position} for position, log in enumerate(logs, start=1)]
-                print(data)
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:

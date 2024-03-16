@@ -18,6 +18,7 @@ function get_sweetalert2(args) {
         title: args.title,
         confirmButtonText: 'De acuerdo!',
         html: args.html,
+        timerProgressBar: true,
         timer: args.timer,
     }).then(function () {
         args.callback();

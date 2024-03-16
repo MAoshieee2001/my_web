@@ -33,7 +33,7 @@ class ProductTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, T
                 products = Product.objects.select_related('category')
                 # Filtramos ssis hay informacion entrante
                 if term:
-                    products.filter(Q(names__icontains=term) | Q(category__names__icontains=term))
+                    products = products.filter(Q(category__in=Category.objects.filter(names__icontains=term)) | Q(names__icontains=term))
                 # Creamos nuestra paginacion
                 paginator = Paginator(products, length)
                 get_numbers = start // length + 1

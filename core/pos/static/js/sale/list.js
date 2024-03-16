@@ -3,6 +3,8 @@ let tbtSale;
 let sale = {
     list: function () {
         tbtSale = $('#data').DataTable({
+            serverSide: true,
+            processing: true,
             responsive: true,
             autoWidth: false,
             destroy: true,
@@ -14,7 +16,7 @@ let sale = {
                 data: {
                     action: 'get_sales',
                 }, // parametros
-                dataSrc: ""
+                dataSrc: "data"
             },
             columns: [
                 {"data": "position"},
@@ -58,7 +60,8 @@ let sale = {
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return "<a class='btn btn-primary btn-xs' rel='btnDetails'><i class='fas fa-search'></i></a> " +
+                        return '<a class="btn btn-primary btn-xs" rel="btnDetails"><i class="fas fa-search"></i></a> ' +
+                            '<a class="btn btn-success btn-xs" href="' + pathname + 'invoice/pdf/' + data + '/" target="_blank"><i class="fas fa-file-pdf"></i></a> ' +
                             "<a class='btn btn-danger btn-xs' href='" + pathname + 'delete/' + data + "/' rel='btnDelete'><i class='fas fa-trash'></i></a>";
                     }
                 },
@@ -74,7 +77,7 @@ $(function () {
     sale.list();
 
     $('#data tbody').on('click', 'a[rel="btnDetails"]', function (evt) {
-        let tr = tbtSale.cell($(this).closest('td')).index();
+        let tr = tbtSale.cell($(this).closest('td,li')).index();
         let sale = tbtSale.row(tr.row).data();
         $('#details').DataTable({
             responsive: true,

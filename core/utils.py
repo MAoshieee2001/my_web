@@ -8,28 +8,28 @@ import json
 
 from core.pos.models import Product, Category, Customer
 
+
 # print(f'PR{random.randint(100, 999)}{random.choice(string.ascii_letters)}')
 
 
-'''
 def insert_product():
     ruta = f'{settings.BASE_DIR}/deploy/json/categories.json'
     try:
         with open(ruta, encoding='utf8') as product_file:
             products = json.load(product_file)
-            for p in products:
-                product = Product()
-                product.category = Category.objects.get_or_create(names=p['names'])[0]
-                product.names = p['names']
-                product.code = random.randint(1, 200)
-                product.pvp = round(random.randint(1, 100) * random.random(), 2)
-                product.save()
+            for i in range(0, 12):
+                for p in products:
+                    product = Product()
+                    product.category = Category.objects.get_or_create(names=p['names'])[0]
+                    product.names = p['names']
+                    product.code = random.randint(1, 200)
+                    product.pvp = round(random.randint(1, 100) * random.random(), 2)
+                    product.save()
     except Exception as e:
         print(e)
 
 
 insert_product()
-'''
 
 '''
 def insert_customer():

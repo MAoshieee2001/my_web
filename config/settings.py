@@ -114,7 +114,7 @@ STATICFILES_DIRS = [
 ]
 # ? Manejo de archivos dinamicos por el usuario
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # ? Actualizando mi clase usuario
 AUTH_USER_MODEL = 'accounts.User'

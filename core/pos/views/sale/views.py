@@ -1,12 +1,18 @@
 import json
+import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template.loader import get_template
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, TemplateView, DeleteView
-
+from weasyprint import CSS
+from weasyprint import HTML
+from config import settings
 from core.pos.forms import SaleForm, CustomerForm
 from core.pos.models import Sale, Customer, Product, DetailSale
 
@@ -21,7 +27,25 @@ class SaleTemplateView(LoginRequiredMixin, TemplateView):
         try:
             action = request.POST['action']
             if action == 'get_sales':
-                data = [sale.toJSON() | {'position': position} for position, sale in enumerate(Sale.objects.all(), start=1)]
+                # Capturamos nuestros campos de datatable
+                start = int(request.POST.get('start', 0))
+                length = int(request.POST.get('length', 0))
+                term = request.POST.get('search[value]', '')
+                # Obtenemos nuestro queryset
+                sales = Sale.objects.all()
+                # Filtramo si hay un dato entrante en search
+                if term:
+                    sales = sales.filter(Q(customer__first_names__icontains=term) | Q(customer__last_names__icontains=term) | Q(employee__first_name__icontains=term))
+                # Utilizamo el paginator
+                paginator = Paginator(sales, length)
+                get_number = start // length + 1
+                sales_page = paginator.page(get_number)
+                data = {
+                    'data': [sale.toJSON() | {'position': position} for position, sale in enumerate(sales_page, start=start + 1)],
+                    'recordsTotal': paginator.count,
+                    'recordsFiltered': paginator.count,
+                    'draw': int(request.POST.get('draw', 1))
+                }
             elif action == 'get_details':
                 id_sale = request.POST['id_sale']
                 details = DetailSale.objects.filter(sale_id=id_sale)
@@ -87,8 +111,25 @@ class SaleCreateView(LoginRequiredMixin, CreateView):
                 data = [product.toJSON() | {'value': product.names} for product in products.exclude(id__in=ids_exclude)[0:5]]
             elif action == 'get_products_data':
                 ids_exclude = json.loads(request.POST['products_id'])
-                products = Product.objects.filter(stock__gt=0)
-                data = [product.toJSON() for product in products.exclude(id__in=ids_exclude)]
+                # Capturar los datos del dataTable
+                start = int(request.POST.get('start', 0))
+                length = int(request.POST.get('length', 10))
+                search = request.POST.get('search[value]', '')
+                # Obtener nuesstro queryet
+                products = Product.objects.filter(stock__gt=0).exclude(id__in=ids_exclude)
+                if search:
+                    products = products.filter(names__icontains=search)
+                # LLamamos a nuestro paginator
+                paginator = Paginator(products, length)
+                page_number = start // length + 1
+                products_page = paginator.get_page(page_number)
+
+                data = {
+                    'data': [product.toJSON() for product in products_page],
+                    'recordsTotal': paginator.count,
+                    'recordsFiltered': paginator.count,
+                    'draw': int(request.POST.get('draw', 1))
+                }
             elif action == 'create_customer':
                 customer = CustomerForm(request.POST)
                 data = customer.save()
@@ -139,3 +180,20 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
         context['action'] = 'delete'
         context['list_url'] = self.success_url
         return context
+
+
+# lib/adminlte-3.2.0/css/adminlte.min.css
+class SaleInvoicePdfView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        try:
+            template = get_template('sale/invoice.html')
+            context = {
+                'sale': Sale.objects.get(pk=self.kwargs['pk']),
+            }
+            html = template.render(context)
+            # css_url = os.path.join(settings.BASE_DIR, 'static/lib/adminlte-3.2.0/css/adminlte.min.css')
+            pdf = HTML(string=html).write_pdf()
+            return HttpResponse(pdf, content_type='application/pdf')
+        except Exception as e:
+            print(e)
+        return HttpResponseRedirect(reverse_lazy('pos:sale_list'))
