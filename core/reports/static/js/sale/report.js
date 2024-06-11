@@ -49,16 +49,18 @@ let report_sale = {
             },
             columns: [
                 {"data": "date_joined"},
-                {"data": "position"},
+                {"data": "code_sale"},
                 {"data": "customer.full_names"},
                 {"data": "subtotal"},
                 {"data": "iva"},
                 {"data": "total"},
+                {"data": "cash"},
+                {"data": "change"},
                 {"data": "employee.full_names"},
             ],
             columnDefs: [
                 {
-                    targets: [-2, -4],
+                    targets: [-2, -3, -4],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
@@ -66,7 +68,7 @@ let report_sale = {
                     }
                 },
                 {
-                    targets: [-3],
+                    targets: [-5],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {

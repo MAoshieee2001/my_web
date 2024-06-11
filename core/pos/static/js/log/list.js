@@ -15,30 +15,31 @@ let log = {
                 dataSrc: ""
             },
             columns: [
-                {"data": "position"},
-                {"data": "customer.full_names_DNI"},
-                {"data": "date_joined"},
-                {"data": "employee.full_names"},
-                {"data": "total"},
-                {"data": "action.names"},
                 {"data": "date_log"},
                 {"data": "user_log.full_names"},
+                {"data": "code_sale"},
+                {"data": "customer.full_names"},
+                {"data": "date_joined"},
+                {"data": "total"},
+                {"data": "cash"},
+                {"data": "change"},
+                {"data": "action"},
             ],
             columnDefs: [
                 {
-                    targets: [-3],
+                    targets: [-1],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<span class="badge badge-danger">' + data + '</span>';
+                        return '<span class="badge badge-danger">' + data.names + '</span>';
                     }
                 },
                 {
-                    targets: [-4],
+                    targets: [-2, -3, -4],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<span class="badge badge-warning">S/ ' + parseFloat(data).toFixed(2) + '</span>';
+                        return 'S/ ' + parseFloat(data).toFixed(2);
                     }
                 },
             ],

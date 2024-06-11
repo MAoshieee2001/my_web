@@ -8,7 +8,7 @@ let category = {
             destroy: true,
             deferRender: true,
             ajax: {
-                url: window.location.pathname,
+                url: pathname,
                 type: 'POST',
                 headers: {'X-CSRFToken': csrfToken},
                 data: {

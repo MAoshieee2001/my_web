@@ -20,6 +20,7 @@ let sale = {
             },
             columns: [
                 {"data": "position"},
+                {"data": "code_sale"},
                 {"data": "customer.full_names"},
                 {"data": "date_joined"},
                 {"data": "employee.full_names"},

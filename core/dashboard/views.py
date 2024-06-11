@@ -25,7 +25,6 @@ class DashboardTemplateView(LoginRequiredMixin, TemplateView):
             action = request.POST['action']
             if action == 'get_graph_donut':
                 data = []
-                year = datetime.now().year
                 for product in Product.objects.all():
                     result = float(product.detailsale_set.all().aggregate(result=Coalesce(Sum('subtotal'), 0.00, output_field=DecimalField())).get('result'))
                     if result > 0:
