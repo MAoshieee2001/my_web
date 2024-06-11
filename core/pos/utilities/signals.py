@@ -9,6 +9,7 @@ from core.pos.models import Sale, Logs
 def create_logs_post_delete(sender, instance, **kwargs):
     request = get_current_request()
     log = Logs()
+    log.code_sale = instance.generate_code_sale()
     log.customer = instance.customer
     log.employee = instance.employee
     log.date_joined = instance.date_joined

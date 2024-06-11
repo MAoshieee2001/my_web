@@ -14,7 +14,7 @@ let product = {
                 data: {
                     action: 'get_products',
                 }, // parametros
-                dataSrc: 'data'
+                dataSrc: 'products'
             },
             columns: [
                 {"data": "position"},
@@ -23,6 +23,8 @@ let product = {
                 {"data": "category.names"},
                 {"data": "names"},
                 {"data": "description"},
+                {"data": "is_service"},
+                {"data": "purchase"},
                 {"data": "pvp"},
                 {"data": "stock"},
                 {"data": "id"},
@@ -37,11 +39,19 @@ let product = {
                     }
                 },
                 {
-                    targets: [-3],
+                    targets: [-5],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<span class="badge badge-warning"> S/. ' + parseFloat(data).toFixed(2) + '</span>';
+                        return (data) ? '<span class="badge badge-info">SI</span>' : '<span class="badge badge-secondary">NO</span>';
+                    }
+                },
+                {
+                    targets: [-3, -4],
+                    class: 'text-center',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return 'S/.' + parseFloat(data).toFixed(2);
                     }
                 },
                 {
@@ -49,7 +59,11 @@ let product = {
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
+                        if (row.is_service) {
+                            return '-----';
+                        }
                         return (data > 0) ? '<span class="badge badge-success">' + data + '</span>' : '<span class="badge badge-danger">' + data + '</span>';
+
                     }
                 },
                 {

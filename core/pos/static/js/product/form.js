@@ -31,6 +31,15 @@ $(function () {
     $('input[name="names"]').on('keypress', function (evt) {
         return validate_text_box(evt, 'letters');
     });
+    $('input[name="purchase"]').TouchSpin({
+        min: 0,
+        max: 10000,
+        step: 0.1,
+        decimals: 2,
+        prefix: 'S/.'
+    }).on('keypress', function (evt) {
+        return validate_text_box(evt, 'decimals');
+    });
     $('input[name="pvp"]').TouchSpin({
         min: 0,
         max: 10000,

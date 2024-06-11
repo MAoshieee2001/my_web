@@ -3,7 +3,7 @@ choices_gender = (
     (False, 'Femenino'),
 )
 choices_action = (
-    ('create', 'Crear'),
-    ('update', 'Actualizar'),
-    ('delete', 'Eliminar'),
+    ('create', 'Creado'),
+    ('update', 'Actualizado'),
+    ('delete', 'Eliminado'),
 )

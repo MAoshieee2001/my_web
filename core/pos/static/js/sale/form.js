@@ -436,11 +436,12 @@ $(function () {
         params.append('products', JSON.stringify(sale.items.products));
         set_data_server({
             params: params,
-            callback: function () {
+            callback: function (response) {
                 get_dialog_confirm({
                     'content': '¿Quieres imprimir la boleta de venta?',
                     'success': function () {
-
+                        window.open(response.print_url, '_blank');
+                        location.href = data_url;
                     },
                     'cancel': function () {
                         location.href = data_url;

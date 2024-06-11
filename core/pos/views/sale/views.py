@@ -14,12 +14,14 @@ from weasyprint import CSS
 from weasyprint import HTML
 from config import settings
 from core.pos.forms import SaleForm, CustomerForm
+from core.pos.mixins import ValidatePermissionRequiredMixin
 from core.pos.models import Sale, Customer, Product, DetailSale
 
 MODULE_NAME = 'Venta'
 
 
-class SaleTemplateView(LoginRequiredMixin, TemplateView):
+class SaleTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):
+    permission_required = 'view_sale'
     template_name = 'sale/list.html'
 
     def post(self, request, *args, **kwargs):
@@ -29,7 +31,7 @@ class SaleTemplateView(LoginRequiredMixin, TemplateView):
             if action == 'get_sales':
                 # Capturamos nuestros campos de datatable
                 start = int(request.POST.get('start', 0))
-                length = int(request.POST.get('length', 0))
+                length = int(request.POST.get('length', 10))
                 term = request.POST.get('search[value]', '')
                 # Obtenemos nuestro queryset
                 sales = Sale.objects.all()
@@ -65,10 +67,11 @@ class SaleTemplateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class SaleCreateView(LoginRequiredMixin, CreateView):
+class SaleCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Sale
     form_class = SaleForm
     template_name = 'sale/create.html'
+    permission_required = 'add_sale'
     success_url = reverse_lazy('pos:sale_list')
 
     def post(self, request, *args, **kwargs):
@@ -95,13 +98,14 @@ class SaleCreateView(LoginRequiredMixin, CreateView):
                         detail.product.stock -= detail.quantity
                         detail.product.save()
                     sale.calcule_invoice()
+                    data = {'print_url': str(reverse_lazy('pos:sale_invoice_pdf', kwargs={'pk': sale.id}))}
             elif action == 'get_cutomers_select2':
                 term = request.POST.get('term', '')
                 customers = Customer.objects.all()
                 if term:
-                    customers = customers.filter(Q(first_names__icontains=term) | Q(last_names__icontains=term) |
-                                                 Q(dni__icontains=term))
-                data = [customer.toJSON() | {'text': customer.get_full_names_DNI()} for customer in customers[0:10]]
+                    customers = customers.filter(Q(first_names__icontains=term) | Q(last_names__icontains=term) | Q(dni__icontains=term))
+                data = [customer.toJSON() | {
+                    'text': customer.get_full_names_DNI()} for customer in customers[0:10]]
             elif action == 'get_products_autocomplete':
                 ids_exclude = json.loads(request.POST['products_id'])
                 term = request.POST.get('term', '')
@@ -116,7 +120,8 @@ class SaleCreateView(LoginRequiredMixin, CreateView):
                 length = int(request.POST.get('length', 10))
                 search = request.POST.get('search[value]', '')
                 # Obtener nuesstro queryet
-                products = Product.objects.filter(stock__gt=0).exclude(id__in=ids_exclude)
+                products = Product.objects.filter(
+                    stock__gt=0).exclude(id__in=ids_exclude)
                 if search:
                     products = products.filter(names__icontains=search)
                 # LLamamos a nuestro paginator
@@ -163,9 +168,10 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
         try:
             action = request.POST['action']
             if action == 'delete':
-                for detail in self.object.detailsale_set.all():
-                    detail.product.stock += detail.quantity
-                    detail.product.save()
+                with transaction.atomic():
+                    for detail in self.object.detailsale_set.all():
+                        detail.product.stock += detail.quantity
+                        detail.product.save()
                     self.object.delete()
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
@@ -182,7 +188,6 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-# lib/adminlte-3.2.0/css/adminlte.min.css
 class SaleInvoicePdfView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         try:

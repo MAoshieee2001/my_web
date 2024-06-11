@@ -29,9 +29,11 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name='Categoria')
-    code = models.CharField(max_length=20,  verbose_name='Código')
+    code = models.CharField(max_length=20, blank=True, null=True, verbose_name='Código')
     names = models.CharField(max_length=144, verbose_name='Nombre')
     description = models.TextField(blank=True, null=True, verbose_name='Descripción')
+    is_service = models.BooleanField(default=False, verbose_name='¿Es un servicio?')
+    purchase = models.DecimalField(default=0.00, decimal_places=2, max_digits=9, verbose_name='Precio de compra')
     pvp = models.DecimalField(default=0.00, max_digits=9, decimal_places=2, verbose_name='Precio de venta')
     stock = models.PositiveIntegerField(default=0, verbose_name='Stock')
     imagen = models.ImageField(upload_to='products/', null=True, blank=True, verbose_name='Imagen')
@@ -52,6 +54,7 @@ class Product(models.Model):
         item = model_to_dict(self)
         item['category'] = self.category.toJSON()
         item['pvp'] = float(self.pvp)
+        item['purchase'] = float(self.purchase)
         item['imagen'] = self.get_imagen()
         item['short_names'] = self.get_short_names()
         item['long_names'] = self.get_long_names()
@@ -75,10 +78,10 @@ class Customer(models.Model):
     phone = models.CharField(max_length=9, null=True, blank=True, verbose_name='Telefono celular')
 
     def __str__(self):
-        return f'{self.last_names}, {self.first_names}'
+        return f'{self.first_names} {self.last_names}'
 
     def get_full_names(self):
-        return f'{self.last_names}, {self.first_names}'
+        return f'{self.first_names} {self.last_names}'
 
     def get_full_names_DNI(self):
         return f'{self.last_names}, {self.first_names} - DNI : {self.dni}'
@@ -111,6 +114,9 @@ class Sale(models.Model):
     def __str__(self):
         return self.customer.get_full_names()
 
+    def generate_code_sale(self):
+        return f'V-{self.pk:05d}'
+
     def calcule_invoice(self):
         self.subtotal = self.detailsale_set.aggregate(result=Sum(Coalesce('subtotal', 0.00, output_field=FloatField()))).get('result')
         self.total = self.subtotal + (self.subtotal * self.iva)
@@ -119,6 +125,7 @@ class Sale(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['code_sale'] = self.generate_code_sale()
         item['customer'] = self.customer.toJSON()
         item['employee'] = self.employee.toJSON()
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
@@ -165,6 +172,7 @@ class Logs(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, verbose_name='Cliente')
     employee = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Empleado', related_name='employee_logs')
     date_joined = models.DateField(default=datetime.now, verbose_name='Fecha Registro')
+    code_sale = models.CharField(verbose_name='Codigo de venta')
     subtotal = models.DecimalField(default=0.00, decimal_places=2, max_digits=9, verbose_name='Subtotal')
     iva = models.DecimalField(default=0.00, decimal_places=2, max_digits=9, verbose_name='IVA')
     total = models.DecimalField(default=0.00, decimal_places=2, max_digits=9, verbose_name='Total')
@@ -178,11 +186,13 @@ class Logs(models.Model):
         return f'Acción : {self.action} - Usuario : {self.user_log}'
 
     def toJSON(self):
-        item = model_to_dict(self, exclude=['subtotal', 'iva', 'cash', 'change'])
+        item = model_to_dict(self, exclude=['iva', 'subtotal'])
         item['customer'] = self.customer.toJSON()
         item['employee'] = self.employee.toJSON()
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['total'] = float(self.total)
+        item['cash'] = float(self.cash)
+        item['change'] = float(self.change)
         item['user_log'] = self.user_log.toJSON()
         item['date_log'] = self.date_log.strftime('%Y-%m-%d')
         item['action'] = {'id': self.action, 'names': self.get_action_display()}

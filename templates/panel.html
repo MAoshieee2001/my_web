@@ -3,6 +3,7 @@
 
 {% block head %}
     <script src="{% static 'lib/highcharts-9.1.1/highcharts.js' %}"></script>
+    <script src="{% static 'js/panel/panel.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -16,24 +17,24 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th scope="col" style="width: 5%;">#</th>
-                            <th scope="col" style="width: 20%;">F. Venta</th>
+                            <th scope="col" style="width: 10%;">F. Venta</th>
+                            <th scope="col" style="width: 10%;">Factura</th>
                             <th scope="col" style="width: 20%;">Cliente</th>
-                            <th scope="col">Subtotal</th>
-                            <th scope="col">Iva</th>
-                            <th scope="col">Total</th>
+                            <th scope="col" style="width: 5%;">Subtotal</th>
+                            <th scope="col" style="width: 5%;">Iva</th>
+                            <th scope="col" style="width: 5%;">Total</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         {% for sale in sales %}
                             <tr>
-                                <td>{{ sale.id }}</td>
                                 <td>{{ sale.date_joined }}</td>
+                                <td>{{ sale.generate_code_sale }}</td>
                                 <td>{{ sale.customer.get_full_names }}</td>
-                                <td>{{ sale.subtotal }}</td>
+                                <td>S/.{{ sale.subtotal }}</td>
                                 <td>{{ sale.iva }}</td>
-                                <td>{{ sale.total }}</td>
+                                <td>S/.{{ sale.total }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -50,63 +51,12 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="card"></div>
+            <div class="card">
+                <div id="container-bar"></div>
+            </div>
         </div>
     </div>
 {% endblock %}
 
 {% block javascript %}
-    <script type="application/javascript">
-        let panel = {
-            graph_donut: function () {
-                $.ajax({
-                    headers: {'X-CSRFToken': csrfToken},
-                    url: pathname,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        action: 'get_graph_donut',
-                    },
-                    success: function (response) {
-                        if (!response.hasOwnProperty('error')) {
-                            Highcharts.chart('container-donut', {
-                                chart: {
-                                    type: 'pie',
-                                    backgroundColor: '#FFFFFF',
-                                },
-                                title: {
-                                    text: 'Productos más vendidos del año.'
-                                },
-                                plotOptions: {
-                                    pie: {
-                                        innerSize: '50%',
-                                        dataLabels: {
-                                            enabled: true,
-                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Market Share',
-                                    data: response
-                                }]
-                            });
-                            return false;
-                        }
-                        get_errors(response.error);
-                    },
-                    error: function (xhr, errorType, errorMessage) {
-                        get_errors(errorType + ' ' + errorMessage);
-                    },
-                    complete: function () {
-
-                    }
-                });
-            }
-        }
-
-        $(function () {
-            panel.graph_donut();
-        });
-    </script>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView
 
 from core.pos.forms import ProductForm
 from core.pos.mixins import ValidatePermissionRequiredMixin
@@ -25,25 +25,23 @@ class ProductTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, T
         try:
             action = request.POST['action']
             if action == 'get_products':
-                # Capturamo los datos del tatable
-                start = int(request.POST.get('start', 0))
+                # Capturamos nuestros valores de entrada
+                start = int(request.POST.get('start', 1))
                 length = int(request.POST.get('length', 10))
                 term = request.POST.get('search[value]', '')
-                # Obtenemoss nuesstro queryset
-                products = Product.objects.select_related('category')
-                # Filtramos ssis hay informacion entrante
+                # Instaciamos nuestro queryset
+                products = Product.objects.all()
                 if term:
-                    products = products.filter(Q(category__in=Category.objects.filter(names__icontains=term)) | Q(names__icontains=term))
-                # Creamos nuestra paginacion
+                    products = products.filter(Q(code__icontains=term) | Q(names__icontains=term))
+                # Instanciamos nuestro paginator
                 paginator = Paginator(products, length)
-                get_numbers = start // length + 1
-                products_page = paginator.get_page(get_numbers)
-                # Mandamos la información
+                page_number = start // length + 1
+                products_page = paginator.get_page(page_number)
                 data = {
-                    'data': [product.toJSON() | {'position': position} for position, product in enumerate(products_page, start=start + 1)],
+                    'products': [product.toJSON() | {'position': position} for position, product in enumerate(products_page, start=start + 1)],
                     'recordsTotal': paginator.count,
                     'recordsFiltered': paginator.count,
-                    'draw': int(request.POST.get('draw', 1)),
+                    'draw': int(request.POST.get('draw', 1))
                 }
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
@@ -72,16 +70,16 @@ class ProductCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Cre
         data = {}
         try:
             action = request.POST['action']
-            if action == 'get_categories_term':
+            if action == 'create':
+                form = self.get_form()
+                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
+                data = form.save()
+            elif action == 'get_categories_term':
                 term = request.POST.get('term', '')
                 categories = Category.objects.all()
                 if term:
                     categories = categories.filter(names__icontains=term)
                 data = [{'id': category.id, 'text': category.names} for category in categories[0:10]]
-            elif action == 'create':
-                form = self.get_form()
-                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
-                data = form.save()
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:
@@ -118,16 +116,16 @@ class ProductUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Upd
         data = {}
         try:
             action = request.POST['action']
-            if action == 'get_categories_term':
+            if action == 'update':
+                form = self.get_form()
+                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
+                data = form.save()
+            elif action == 'get_categories_term':
                 term = request.POST.get('term', '')
                 categories = Category.objects.all()
                 if term:
                     categories = categories.filter(names__icontains=term)
                 data = [{'id': category.id, 'text': category.names} for category in categories[0:10]]
-            elif action == 'update':
-                form = self.get_form()
-                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
-                data = form.save()
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:

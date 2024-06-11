@@ -13,7 +13,7 @@ class User(AbstractUser):
         return f'{settings.MEDIA_URL}{self.imagen}' if self.imagen else f'{settings.STATIC_URL}img/empty.png'
 
     def get_full_name(self):
-        return f'{self.last_name}, {self.first_name}'
+        return f'{self.last_name} {self.first_name}'
 
     def toJSON(self):
         item = model_to_dict(self, exclude=['password', 'is_superuser', 'is_staff', 'is_active', 'user_permissions'])

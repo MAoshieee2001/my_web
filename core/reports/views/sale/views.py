@@ -1,17 +1,20 @@
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
+from core.pos.mixins import ValidatePermissionRequiredMixin
 from core.pos.models import Sale
 from core.reports.forms import ReportSaleForm
 
 MODULE_NAME = 'Venta'
 
 
-class ReportSaleTemplateView(FormView):
+class ReportSaleTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormView):
     form_class = ReportSaleForm
+    permission_required = 'view_sale'
     template_name = 'sale/report.html'
 
     def post(self, request, *args, **kwargs):

@@ -11,5 +11,7 @@ from core.accounts.models import *
 # product = Product.objects.first()
 # print(product.toJSON())
 
-user = User.objects.first()
-print(user.toJSON())
+
+for sale in Sale.objects.all():
+    for detail in sale.detailsale_set.all():
+        pass

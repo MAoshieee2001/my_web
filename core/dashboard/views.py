@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, DecimalField
@@ -24,6 +25,7 @@ class DashboardTemplateView(LoginRequiredMixin, TemplateView):
             action = request.POST['action']
             if action == 'get_graph_donut':
                 data = []
+                year = datetime.now().year
                 for product in Product.objects.all():
                     result = float(product.detailsale_set.all().aggregate(result=Coalesce(Sum('subtotal'), 0.00, output_field=DecimalField())).get('result'))
                     if result > 0:
@@ -31,6 +33,14 @@ class DashboardTemplateView(LoginRequiredMixin, TemplateView):
                             'name': product.names,
                             'y': result
                         })
+            elif action == 'get_graph_bar':
+                data = []
+                year = datetime.now().year
+                queryset = Sale.objects.filter(date_joined__year=year)
+                for month in range(1, 13):
+                    total = queryset.filter(date_joined__month=month).aggregate(result=Coalesce(Sum('total'), 0.00, output_field=DecimalField())).get('result')
+                    data.append(float(total))
+                print(data)
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:
