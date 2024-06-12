@@ -14,8 +14,8 @@ from weasyprint import CSS
 from weasyprint import HTML
 from config import settings
 from core.pos.forms import SaleForm, CustomerForm
-from core.pos.mixins import ValidatePermissionRequiredMixin
-from core.pos.models import Sale, Customer, Product, DetailSale
+from core.pos.mixins import ValidatePermissionRequiredMixin, CompanyIsExistMixin
+from core.pos.models import Sale, Customer, Product, DetailSale, Company
 
 MODULE_NAME = 'Venta'
 
@@ -67,7 +67,7 @@ class SaleTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Temp
         return context
 
 
-class SaleCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
+class SaleCreateView(LoginRequiredMixin, CompanyIsExistMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Sale
     form_class = SaleForm
     template_name = 'sale/create.html'
@@ -82,6 +82,7 @@ class SaleCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Create
                 products = json.loads(request.POST['products'])
                 with transaction.atomic():
                     sale = Sale()
+                    sale.company = Company.objects.first()
                     sale.customer_id = int(request.POST['customer'])
                     sale.employee = request.user
                     sale.iva = float(request.POST['iva'])
@@ -139,7 +140,7 @@ class SaleCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Create
                 customer = CustomerForm(request.POST)
                 data = customer.save()
             else:
-                data['error'] = 'No ha ingressado ninguna opción.'
+                data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:
             data['error'] = str(e)
         return HttpResponse(json.dumps(data), content_type='application/json')
@@ -154,9 +155,10 @@ class SaleCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Create
         return context
 
 
-class SaleDeleteView(LoginRequiredMixin, DeleteView):
+class SaleDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Sale
     template_name = 'delete.html'
+    permission_required = 'delete_sale'
     success_url = reverse_lazy('pos:sale_list')
 
     def dispatch(self, request, *args, **kwargs):
@@ -188,7 +190,9 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-class SaleInvoicePdfView(LoginRequiredMixin, View):
+class SaleInvoicePdfView(LoginRequiredMixin, ValidatePermissionRequiredMixin, View):
+    permission_required = 'view_sale'
+
     def get(self, request, *args, **kwargs):
         try:
             template = get_template('sale/invoice.html')

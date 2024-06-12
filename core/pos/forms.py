@@ -144,3 +144,40 @@ class SaleForm(ModelForm):
                 'placeholder': 'Digite el efectivo a pagar',
             }),
         }
+
+
+class CompanyForm(ModelForm):
+    def __init__(self, **kwargs):
+        super(CompanyForm, self).__init__(**kwargs)
+
+    def save(self, commit=True):
+        data = {}
+        try:
+            if self.is_valid():
+                self.instance.save()
+            else:
+                data['error'] = self.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+    class Meta:
+        model = Company
+        fields = '__all__'
+        widgets = {
+            'names': TextInput(attrs={
+                'placeholder': 'Ingrese la razón social de su empresa.',
+            }),
+            'ruc': TextInput(attrs={
+                'placeholder': 'Ingrese el RUC de su empresa.',
+            }),
+            'address': Textarea(attrs={
+                'placeholder': 'Ingrese la dirección matriz de su empresa.',
+            }),
+            'phone': TextInput(attrs={
+                'placeholder': 'Ingrese el celular de su empresa.',
+            }),
+            'email': EmailInput(attrs={
+                'placeholder': 'Ingrese el email de su empresa.',
+            }),
+        }

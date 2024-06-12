@@ -67,7 +67,6 @@ class Product(models.Model):
         ordering = ['id']
 
 
-######################################################################################################################
 class Customer(models.Model):
     first_names = models.CharField(max_length=144, verbose_name='Nombre Completo')
     last_names = models.CharField(max_length=144, verbose_name='Apellido completo')
@@ -101,7 +100,25 @@ class Customer(models.Model):
         ordering = ['id']
 
 
+class Company(models.Model):
+    names = models.CharField(max_length=144, verbose_name='Razón Social')
+    ruc = models.CharField(max_length=12, verbose_name='RUC')
+    address = models.TextField(verbose_name='Dirección Social')
+    phone = models.CharField(max_length=9, verbose_name='Celular')
+    email = models.EmailField(verbose_name='Correo Electronico')
+
+    def __str__(self):
+        return self.names
+
+    class Meta:
+        db_table = 'compañia'
+        verbose_name = 'Compañia'
+        verbose_name_plural = 'Compañias'
+        ordering = ['id']
+
+
 class Sale(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.PROTECT, verbose_name='Compañia')
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, verbose_name='Cliente')
     employee = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Empleado')
     date_joined = models.DateField(default=datetime.now, verbose_name='Fecha Registro')
@@ -167,7 +184,6 @@ class DetailSale(models.Model):
         ordering = ['id']
 
 
-######################################################################################################################
 class Logs(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, verbose_name='Cliente')
     employee = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Empleado', related_name='employee_logs')

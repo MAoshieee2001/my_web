@@ -1,6 +1,7 @@
 from django.urls import path
 
 from core.pos.views.category.views import *
+from core.pos.views.company.views import CompanyUpdateView
 from core.pos.views.customer.views import *
 from core.pos.views.log.views import LogTemplateView
 from core.pos.views.product.views import *
@@ -31,5 +32,7 @@ urlpatterns = [
     path('sale/invoice/pdf/<int:pk>/', SaleInvoicePdfView.as_view(), name='sale_invoice_pdf'),
     # ! LOG
     path('log/', LogTemplateView.as_view(), name='log_list'),
+    # ! Company
+    path('company/', CompanyUpdateView.as_view(), name='company_update'),
 
 ]

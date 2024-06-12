@@ -82,10 +82,10 @@
 <div class="content">
     <img alt="" src="{{ sale.company.get_image }}" class="img-fluid d-block mx-auto img-logo">
     <h1 class="head-name">{{ sale.company.name|upper }}</h1>
-    <p class="text-center head-details">
+    <p class="text-center">
         Dirección matriz: {{ sale.company.address }}<br>
         RUC: {{ sale.company.ruc }}<br>
-        Teléfono: {{ sale.company.phone }} / Celular: {{ sale.company.mobile }}<br>
+        Celular: {{ sale.company.phone }}<br>
         Email: {{ sale.company.email }}
     </p>
 
@@ -93,9 +93,9 @@
 
     <p class="head-data">
         <b>Fecha de registro:</b> {{ sale.date_joined|date:'c' }}<br>
-        <b>Factura:</b> {{ sale.id }}<br>
+        <b>Factura:</b> {{ sale.generate_code_sale }}<br>
         <b>Cliente:</b> {{ sale.customer.get_full_names }}<br>
-        <b>Número de cédula:</b> {{ sale.customer.dni }}<br>
+        <b>DNI:</b> {{ sale.customer.dni }}<br>
     </p>
 
     <table class="table table-borderless table-sm" id="details" style="margin-bottom: 0">
@@ -112,8 +112,8 @@
             <tr>
                 <td>{{ detail.quantity }}</td>
                 <td>{{ detail.product.names }}</td>
-                <td>{{ detail.price|floatformat:2 }}</td>
-                <td class="text-right">{{ detail.subtotal|floatformat:2 }}</td>
+                <td>S/. {{ detail.price|floatformat:2 }}</td>
+                <td class="text-right"> S/. {{ detail.subtotal|floatformat:2 }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -128,20 +128,20 @@
         </thead>
         <tbody>
         <tr>
-            <td class="float-right font-weight-bold">Subtotal sin impuestos</td>
-            <td class="text-right">{{ sale.subtotal|floatformat:2 }}</td>
+            <td class="float-right font-weight-bold">Subtotal sin impuestos :</td>
+            <td class="text-right">S/. {{ sale.subtotal|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="float-right font-weight-bold">Total</td>
-            <td class="text-right">{{ sale.total|floatformat:2 }}</td>
+            <td class="float-right font-weight-bold">Total :</td>
+            <td class="text-right">S/. {{ sale.total|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="float-right font-weight-bold">Efectivo</td>
-            <td class="text-right">{{ sale.cash|floatformat:2 }}</td>
+            <td class="float-right font-weight-bold">Efectivo :</td>
+            <td class="text-right">S/. {{ sale.cash|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="float-right font-weight-bold">Cambio</td>
-            <td class="text-right">{{ sale.change|floatformat:2 }}</td>
+            <td class="float-right font-weight-bold">Cambio :</td>
+            <td class="text-right">S/. {{ sale.change|floatformat:2 }}</td>
         </tr>
         </tbody>
     </table>

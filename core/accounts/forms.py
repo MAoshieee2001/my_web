@@ -12,13 +12,13 @@ class UserForm(ModelForm):
         data = {}
         try:
             if self.is_valid():
-                password = self.cleaned_data.get('password')
-                instance = super().save(commit=False)
-                if instance.pk is None or User.objects.get(pk=instance.pk).password != password:
-                    instance.set_password(password)
-                instance.save()
-                instance.groups.clear()
-                instance.groups.set(self.cleaned_data['groups'])
+                password = self.cleaned_data.get('password', '')  # Obtenemos la contraseña del campo del formulario
+                instance = super().save(commit=False)  # Instanciamos el objeto, sin guardar dado quue puede presentarse un cambio
+                if instance.pk is None or User.objects.get(pk=instance.pk).password != password:  # Validamos si el usuario es nuevo o hubo un cambio de contraseña
+                    instance.set_password(password)  # Seteamos la contrasseña
+                instance.save()  # Guardamoss los cambios del usuario
+                instance.groups.clear()  # Limpiamos el grupo
+                instance.groups.set(self.cleaned_data['groups'])  # Seteamos el nuevo grupo
             else:
                 data['error'] = self.errors
         except Exception as e:

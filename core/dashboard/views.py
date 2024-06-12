@@ -39,7 +39,6 @@ class DashboardTemplateView(LoginRequiredMixin, TemplateView):
                 for month in range(1, 13):
                     total = queryset.filter(date_joined__month=month).aggregate(result=Coalesce(Sum('total'), 0.00, output_field=DecimalField())).get('result')
                     data.append(float(total))
-                print(data)
             else:
                 data['error'] = 'No ha ingresado ninguna opción.'
         except Exception as e:
