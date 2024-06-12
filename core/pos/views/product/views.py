@@ -16,7 +16,7 @@ import time
 MODULE_NAME = 'Producto'
 
 
-class ProductTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):
+class ProductTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):  # Listado de mis productos
     template_name = 'product/list.html'
     permission_required = 'view_product'
 
@@ -72,7 +72,8 @@ class ProductCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Cre
             action = request.POST['action']
             if action == 'create':
                 form = self.get_form()
-                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
+                id_category = request.POST['category']
+                form.fields['category'].queryset = Category.objects.filter(pk=id_category)
                 data = form.save()
             elif action == 'get_categories_term':
                 term = request.POST.get('term', '')
@@ -118,7 +119,8 @@ class ProductUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Upd
             action = request.POST['action']
             if action == 'update':
                 form = self.get_form()
-                form.fields['category'].queryset = Category.objects.filter(pk=request.POST['category'])
+                id_category = request.POST['category']
+                form.fields['category'].queryset = Category.objects.filter(pk=id_category)
                 data = form.save()
             elif action == 'get_categories_term':
                 term = request.POST.get('term', '')

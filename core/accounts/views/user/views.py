@@ -18,11 +18,11 @@ from core.pos.mixins import ValidatePermissionRequiredMixin
 MODULE_NAME = 'Usuario'
 
 
-class UserTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):
+class UserTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):  # Clase que permite listar los usuarios
     template_name = 'user/list.html'
     permission_required = 'view_user'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):  # Funcion que permite realizar acciones mediante el POST
         data = {}
         try:
             action = request.POST['action']
@@ -35,7 +35,7 @@ class UserTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Temp
             data['error'] = str(e)
         return HttpResponse(json.dumps(data), content_type='application/json')
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # Devolvemos un diccionario que debe de cargar en el aplicativo web
         context = super(UserTemplateView, self).get_context_data(**kwargs)
         context['title'] = 'Listado de Usuarios'
         context['entity'] = MODULE_NAME
@@ -44,7 +44,7 @@ class UserTemplateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Temp
         return context
 
 
-class UserCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
+class UserCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):  # Vista que permite crear un usuario
     model = User
     form_class = UserForm
     template_name = 'user/create.html'
@@ -73,7 +73,7 @@ class UserCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Create
         return context
 
 
-class UserUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):  # Vista que permite actualizar el usuario
     model = User
     form_class = UserForm
     template_name = 'user/create.html'
@@ -106,7 +106,7 @@ class UserUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Update
         return context
 
 
-class UserDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):  # Vista que permite eliminar el usuario
     model = User
     template_name = 'delete.html'
     success_url = reverse_lazy('pos:customer_list')
@@ -138,14 +138,13 @@ class UserDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Delete
         return context
 
 
-class UserProfileView(LoginRequiredMixin, UpdateView):
+class UserProfileView(LoginRequiredMixin, UpdateView):  # Vista que permite visualizar el perfil de usuario
     model = User
     form_class = UserProfileForm
     template_name = 'user/create.html'
     success_url = reverse_lazy('dashboard')
 
     def get_object(self, queryset=None):
-        print(self.request.user)
         return self.request.user
 
     def dispatch(self, request, *args, **kwargs):
@@ -173,7 +172,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class UserChangePassswordView(LoginRequiredMixin, FormView):
+class UserChangePassswordView(LoginRequiredMixin, FormView):  # Vista que permite cambiar la contraseña del usuario
     form_class = PasswordChangeForm
     template_name = 'user/create.html'
     success_url = reverse_lazy('dashboard')
@@ -214,7 +213,7 @@ class UserChangePassswordView(LoginRequiredMixin, FormView):
         return context
 
 
-class UserChangeGroupView(LoginRequiredMixin, View):
+class UserChangeGroupView(LoginRequiredMixin, View):  # Vista que permite cambiar los grupos del usuario
 
     def get(self, request, *args, **kwargs):
         try:

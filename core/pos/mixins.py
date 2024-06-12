@@ -35,6 +35,6 @@ class CompanyIsExistMixin:  # Clase Mixin, que permite validar si existe una com
     def get(self, request, *args, **kwargs):
         company = Company.objects.first()
         if company:
-            super(CompanyIsExistMixin, self).get(request, *args, **kwargs)
+            return super(CompanyIsExistMixin, self).get(request, *args, **kwargs)
         messages.error(request, 'Debe de existir su compañia para poder hacer ventas, pongase contacto con el administrador.')
         return redirect(reverse_lazy('pos:company_update'))

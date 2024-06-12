@@ -34,10 +34,6 @@ $(function () {
         return validate_text_box(evt, 'numbers_letters');
     });
 
-    //  Validamos los campos de entradass
-    $('input[name="names"]').on('keypress', function (evt) {
-        return validate_text_box(evt, 'letters');
-    });
 
     //  Validamos los campos de entradass
     $('input[name="purchase"]').TouchSpin({

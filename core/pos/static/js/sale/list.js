@@ -33,7 +33,7 @@ let sale = {
             ],
             columnDefs: [
                 {
-                    targets: [2],
+                    targets: [1, 3],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {

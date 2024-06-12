@@ -121,8 +121,7 @@ class SaleCreateView(LoginRequiredMixin, CompanyIsExistMixin, ValidatePermission
                 length = int(request.POST.get('length', 10))
                 search = request.POST.get('search[value]', '')
                 # Obtener nuesstro queryet
-                products = Product.objects.filter(
-                    stock__gt=0).exclude(id__in=ids_exclude)
+                products = Product.objects.filter(stock__gt=0).exclude(id__in=ids_exclude)
                 if search:
                     products = products.filter(names__icontains=search)
                 # LLamamos a nuestro paginator

@@ -12,7 +12,7 @@ from core.pos.models import Sale, Product
 MODULE_NAME = 'Dashboard'
 
 
-class DashboardTemplateView(LoginRequiredMixin, TemplateView):
+class DashboardTemplateView(LoginRequiredMixin, TemplateView):  # Vista que permite mostrar el template del dashboard
     template_name = 'panel.html'
 
     def get(self, request, *args, **kwargs):
